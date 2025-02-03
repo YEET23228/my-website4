@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการตารางเวลางานสำหรับเด็กขี้เกียจ</title>
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(45deg, #FFB6C1, #FFDDC1, #FFE4B5, #C1FFC1, #B2FFFF, #C1B2FF);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-family: 'Bangers', sans-serif; /* ฟอนต์อนิเมะ */
+            text-align: center;
+            color: #FF5733;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #3385FF;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #57A7FF;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .emoji {
+            font-size: 24px;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>จัดการตารางเวลางานสำหรับเด็กขี้เกียจ 👾</h1>
+
+        <div class="form-group">
+            <label for="taskName">ชื่องาน:</label>
+            <input type="text" id="taskName" placeholder="กรอกชื่องาน">
+        </div>
+
+        <div class="form-group">
+            <label for="taskDuration">ระยะเวลาที่ต้องการ (ชั่วโมง/ใส่เพียงตัวเลข):</label>
+            <input type="number" id="taskDuration" placeholder="กรอกระยะเวลา">
+        </div>
+
+        <div class="form-group">
+            <label for="difficultyLevel">ระดับความยากของงาน:</label>
+            <select id="difficultyLevel">
+                <option value="easy">ง่าย 😌</option>
+                <option value="medium">ปานกลาง 😐</option>
+                <option value="hard">ยาก 😤</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="freeTimeStart">เวลาเริ่มต้นช่วงว่าง:</label>
+            <input type="time" id="freeTimeStart">
+        </div>
+
+        <div class="form-group">
+            <label for="freeTimeEnd">เวลาสิ้นสุดช่วงว่าง:</label>
+            <input type="time" id="freeTimeEnd">
+        </div>
+
+        <div class="form-group">
+            <button onclick="generateSchedule()">จัดการตารางเวลา 🚀</button>
+        </div>
+
+        <div class="result" id="result">
+            <h3>ตารางเวลาที่แนะนำ:</h3>
+            <ul id="scheduleResult">
+                <!-- ตารางเวลาจะแสดงที่นี่ -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        จัดทำโดย '1.นายชนกานต์ แสงเทศ 2ก
+2.นายสมพงษ์ สมพงษ์เจริญ 7ก
+3.นายณัฏฐศรัณยุ์ เปรื่องการ 1ข
+4.นายศักดิ์สิทธิ์ เสาร์หงษ์ 2ข
+5.นายสมโชค ตั้งรัตนสุภัก 3ข
+6.นายสมพร สมหมาย 4ข
+7.นายเอกพัชร์ เพชร์ไทย 5ข
+8.นายกีรติ ฉิมพิบูลย์ 6ข' 😎
+    </div>
+
+    <script>
+        function generateSchedule() {
+            const taskName = document.getElementById('taskName').value;
+            const taskDuration = parseFloat(document.getElementById('taskDuration').value);
+            const difficultyLevel = document.getElementById('difficultyLevel').value;
+            const freeTimeStart = document.getElementById('freeTimeStart').value;
+            const freeTimeEnd = document.getElementById('freeTimeEnd').value;
+            const scheduleResult = document.getElementById('scheduleResult');
+
+            // ตรวจสอบข้อมูลที่กรอก
+            if (!taskName || !taskDuration || !freeTimeStart || !freeTimeEnd) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            // ปรับระยะเวลาให้เหมาะสมกับระดับความยาก
+            let adjustedDuration = taskDuration;
+            if (difficultyLevel === 'easy') {
+                adjustedDuration = taskDuration * 0.8; // ลดเวลาลง 20% สำหรับงานง่าย
+            } else if (difficultyLevel === 'medium') {
+                adjustedDuration = taskDuration; // ใช้เวลาทำงานตามที่กรอก สำหรับงานปานกลาง
+            } else if (difficultyLevel === 'hard') {
+                adjustedDuration = taskDuration * 1.2; // เพิ่มเวลาขึ้น 20% สำหรับงานยาก
+            }
+
+            // แปลงเวลาเริ่มต้นและเวลาสิ้นสุดเป็นเวลาที่สามารถคำนวณได้
+            const [startHour, startMinute] = freeTimeStart.split(':').map(num => parseInt(num));
+            const [endHour, endMinute] = freeTimeEnd.split(':').map(num => parseInt(num));
+
+            // คำนวณระยะเวลาว่าง
+            const startTimeInMinutes = startHour * 60 + startMinute;
+            const endTimeInMinutes = endHour * 60 + endMinute;
+            const availableTimeInMinutes = endTimeInMinutes - startTimeInMinutes;
+
+            if (availableTimeInMinutes < adjustedDuration * 60 + (adjustedDuration - 1) * 15) {
+                alert('เวลาว่างไม่เพียงพอสำหรับงานที่ต้องการ');
+                return;
+            }
+
+            // สร้างตารางเวลา
+            scheduleResult.innerHTML = ''; // เคลียร์ผลลัพธ์ก่อน
+            let startTime = startTimeInMinutes;
+            for (let i = 0; i < adjustedDuration; i++) {
+                const workStartHour = Math.floor(startTime / 60);
+                const workStartMinute = startTime % 60;
+                const workEndHour = Math.floor((startTime + 60) / 60);
+                const workEndMinute = (startTime + 60) % 60;
+
+                const workStartFormatted = `${String(workStartHour).padStart(2, '0')}:${String(workStartMinute).padStart(2, '0')}`;
+                const workEndFormatted = `${String(workEndHour).padStart(2, '0')}:${String(workEndMinute).padStart(2, '0')}`;
+
+                const listItem = document.createElement('li');
+                listItem.textContent = `ทำงานระหว่างเวลา ${workStartFormatted} - ${workEndFormatted} ✨`;
+                scheduleResult.appendChild(listItem);
+
+                // เพิ่มเวลาพักสุ่มระหว่าง 15-30 นาที
+                const breakTime = Math.floor(Math.random() * (30 - 15 + 1)) + 15; // สุ่มระหว่าง 15 ถึง 30 นาที
+                startTime += 60 + breakTime; // เพิ่มเวลาทำงาน + เวลาพัก
+            }
+        }
+    </script>
+</body>
+</html>
